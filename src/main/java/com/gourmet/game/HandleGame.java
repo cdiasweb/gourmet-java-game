@@ -48,9 +48,7 @@ public class HandleGame {
 
         // Continue the game and the search
         if( runGame ) {
-        	
         	showConfirmMealCorrect(knowledge.root);
-        	
         }
         
     }
