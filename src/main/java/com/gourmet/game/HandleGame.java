@@ -4,132 +4,142 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import com.gourmet.model.Meal;
-import com.gourmet.model.MealSubtype;
-import com.gourmet.model.MealType;
+
+import com.gourmet.util.BinaryTree;
+import com.gourmet.util.Node;
 
 public class HandleGame {
-		
-	public HandleGame() {
-		this.addFirstMeals();
-	}
+	
+	BinaryTree knowledge;
+    boolean runGame = true;
 
-	private ArrayList<Meal> meals = new ArrayList<Meal>();
-	private ArrayList<MealType> mealTypes = new ArrayList<MealType>();
-	
-	// better to see in code
-	private final int YES = JOptionPane.YES_OPTION;
-	private final int NO = JOptionPane.NO_OPTION;
-	
-	public void startGame() {
-		JOptionPane.showMessageDialog(null, "Pense em um prato que gosta.", "Jogo Gourmet", JOptionPane.INFORMATION_MESSAGE);
-		this.tryMealType(mealTypes.get(0));
-	}
-	
-	private void tryMealType(MealType type) {
-		int answer = this.showConfirmMealCorrect(type.getDescription(), "Confirm");
-		// right type
-		if( answer == YES ) {
-			tryMealByType(type);
-		} else if( answer == NO ) {
-			// try second meal type
-			Meal meal = meals.get(1);
-			tryMealByType(meal.getType());
-		}
-		
-	}
-	
-	private void tryMealByType(MealType type) {
-		Meal foundMeal = this.findMealByType(type);	
-		if(foundMeal != null && foundMeal.getType() != null) {
-			int answer = this.showConfirmMealCorrect(foundMeal.getName(), "Confirm");
-			if(answer == YES) {
-				this.showMessageAndRestartGame();
-			} else if(!type.getSubtypes().isEmpty()) {
-				// the type has subtypes, test them.
-				this.tryMealBySubtype(type, foundMeal);
-			} else {
-				// give up
-				this.getUserMeal(foundMeal, type);
-			}
-		}
-		
-	}
-	
-	private void tryMealBySubtype(MealType type, Meal previousMeal) {
-		boolean giveUp = false;
-		for(MealSubtype ms: type.getSubtypes()) {
-			int answer = showConfirmMealCorrect(ms.getDescription(), "Confirm");
-			if( answer == YES) {
-				giveUp = false;
-				Meal meal = this.findMealBySubtype(ms);
-				if(meal != null) {
-					int choice = this.showConfirmMealCorrect(meal.getName(), "Confirm");
-					if(choice == YES) {
-						this.showMessageAndRestartGame();
-					}
-				}
-			} else {
-				giveUp = true;
-			}
-		}
-		
-		if(giveUp) {
-			this.getUserMeal(previousMeal, type);
-		}
-	}
-		
-	private void getUserMeal(Meal lastMeal, MealType type) {
-		String meal = JOptionPane.showInputDialog(null, "Qual prato você pensou?", "Desisto", JOptionPane.QUESTION_MESSAGE);
-		String subtype = JOptionPane.showInputDialog(null, meal + " é ________ mas "  + lastMeal + " não.", "Complete", JOptionPane.QUESTION_MESSAGE);
-		
-		MealSubtype newSubtype = new MealSubtype(subtype);
-		type.addSubtype(newSubtype);
-		
-		Meal addMeal = new Meal(meal, type, newSubtype);
-		
-		meals.add(addMeal);
-		
-		// restart the game
-		this.startGame();
-	}
-	
-	private Meal findMealByType(MealType type) {
-		return meals.stream()
-				.filter(meal -> type.equals(meal.getType()))
-				.findAny()
-				.orElse(null);
-	}
-	
-	private Meal findMealBySubtype(MealSubtype subtype)  {
-		return meals.stream()
-				.filter(meal -> subtype.equals(meal.getSubtype()))
-				.findAny()
-				.orElse(null);
-	}
-	
-	private void addFirstMeals() {		
-		MealType pasta = new MealType("massa");
-		mealTypes.add(pasta);
-		
-		MealType cake = new MealType("bolo");
-		mealTypes.add(cake);
-		
-		Meal lasagna = new Meal("Lasanha", pasta);
-		meals.add(lasagna);
-		
-		Meal chocolateCake = new Meal("Bolo de chocolate", cake);
-		meals.add(chocolateCake);
-	}
-	
-	private void showMessageAndRestartGame() {
-		JOptionPane.showMessageDialog(null, "Acertei de novo!");
-		this.startGame();
-	}
+    // To make code more readable
+    final int YES = JOptionPane.YES_OPTION;
+    final int NO = JOptionPane.NO_OPTION;
+    
+    public HandleGame() {
+    	knowledge = new BinaryTree();
+    }
 
-	private int showConfirmMealCorrect(String mealInfo, String title) {
-		String message = "O prato que você pensou é " + mealInfo + " ?";
-		return JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
-	}
+    // Insert first meals in the game 
+    private void addFirstMeals() {
+    	
+    	knowledge.insertNewNode(null, "massa", true);
+    	knowledge.insertNewNode(knowledge.root, "Lasanha", true);
+    	knowledge.insertNewNode(knowledge.root, "Bolo de chocolate", false);
+    	
+    }
+
+    // Start the game
+    public void startGame() {
+    	
+    	// Add the first meals to the binarytree
+        if (knowledge.isEmpty()) {
+            addFirstMeals();
+        }
+
+        // Control the game loop
+        int continueGame = showStartGameMessage();
+
+        // To close application and stop loop
+        if ( continueGame == JOptionPane.CANCEL_OPTION || continueGame == JOptionPane.CLOSED_OPTION ) {
+        	runGame = false;
+        }
+
+        // Continue the game and the search
+        if( runGame ) {
+        	
+        	showConfirmMealCorrect(knowledge.root);
+        	
+        }
+        
+    }
+
+    /**
+     * Recursive function to find meals
+     * First search for the root
+     * node then, if exists right node 
+     * or left node, ask them.
+     * @param node The current node
+     * */
+    public void showConfirmMealCorrect(Node node) {
+    	
+        String question = "O prato que você pensou é " + node.getData() + " ?";
+        
+        int answer = JOptionPane.showConfirmDialog(null, question, "Confirm", JOptionPane.YES_NO_OPTION);
+
+        if ( answer == YES ) {
+        	
+        	// End of the binarytree and the answer is correct 
+            if ( node.isLeaf() ) {
+            	
+            	showMessageAndRestartGame();
+                
+            } else {
+            	
+            	// Not the end of binarytree, check the right child
+            	showConfirmMealCorrect(node.getRightChild());
+            	
+            }
+        } else {
+        	
+        	// The right child is incorrect, and is the end of this branch, get the user meal, give up. 
+            if (node.getRightChild() == null) {
+            	
+            	getUserMeal(node);
+                startGame();
+                
+            } else {
+            	
+            	// Not the end of this branch, check left child
+            	showConfirmMealCorrect(node.getLeftChild());
+            	
+            }
+        }
+    }
+
+    // Show first message to the user
+    private int showStartGameMessage() {
+    	return JOptionPane.showConfirmDialog(null,  "Pense em um prato que gosta", "Jogo Gourmet", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void showMessageAndRestartGame() {
+
+        JOptionPane.showMessageDialog(null, "Acertei de novo!");
+        startGame();
+        
+    }
+
+    /**
+     * Function to get the meal from player when 
+     * the program can't find
+     * @param node 
+     * */
+    private void getUserMeal(Node node) {
+    	
+        String userMeal = JOptionPane.showInputDialog("Qual prato você pensou?");
+        String newMealCategory = JOptionPane.showInputDialog(userMeal  + " é _______ mas " + node.getData() + " não.");
+        changeNodeToCategory(node, newMealCategory, userMeal);
+        
+    }
+
+    /**
+     * Function to add new meal in the knowledge and set
+     * the right and left nodes.
+     * Left child is the wrong try
+     * Right child is the new node
+     * @param node The new node to add
+     * @param category The new category to set this node
+     * @param data The node data
+     * 
+     * */
+    private void changeNodeToCategory(Node node, String category, String data) {
+    	
+        String wrongGuess = node.getData();
+        node.setData(category);
+        node.setLeftChild(new Node(wrongGuess));
+        node.setRightChild(new Node(data));
+        
+    }
 
 }
