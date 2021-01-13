@@ -78,21 +78,7 @@ public class HandleGame {
 			this.getUserMeal(previousMeal, type);
 		}
 	}
-	
-	private Meal findMealByType(MealType type) {
-		return meals.stream()
-				.filter(meal -> type.equals(meal.getType()))
-				.findAny()
-				.orElse(null);
-	}
-	
-	private Meal findMealBySubtype(MealSubtype subtype)  {
-		return meals.stream()
-				.filter(meal -> subtype.equals(meal.getSubtype()))
-				.findAny()
-				.orElse(null);
-	}
-	
+		
 	private void getUserMeal(Meal lastMeal, MealType type) {
 		String meal = JOptionPane.showInputDialog(null, "Qual prato você pensou?", "Desisto", JOptionPane.QUESTION_MESSAGE);
 		String subtype = JOptionPane.showInputDialog(null, meal + " é ________ mas "  + lastMeal + " não.", "Complete", JOptionPane.QUESTION_MESSAGE);
@@ -106,6 +92,20 @@ public class HandleGame {
 		
 		// restart the game
 		this.startGame();
+	}
+	
+	private Meal findMealByType(MealType type) {
+		return meals.stream()
+				.filter(meal -> type.equals(meal.getType()))
+				.findAny()
+				.orElse(null);
+	}
+	
+	private Meal findMealBySubtype(MealSubtype subtype)  {
+		return meals.stream()
+				.filter(meal -> subtype.equals(meal.getSubtype()))
+				.findAny()
+				.orElse(null);
 	}
 	
 	private void addFirstMeals() {		
