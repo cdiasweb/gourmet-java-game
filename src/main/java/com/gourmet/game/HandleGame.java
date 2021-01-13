@@ -10,7 +10,7 @@ import com.gourmet.util.Node;
 
 public class HandleGame {
 	
-	BinaryTree knowledge;
+    BinaryTree knowledge;
     boolean runGame = true;
 
     // To make code more readable
@@ -64,7 +64,7 @@ public class HandleGame {
      * */
     public void showConfirmMealCorrect(Node node) {
     	
-        String question = "O prato que você pensou é " + node.getData() + " ?";
+        String question = "O prato que vocÃª pensou Ã© " + node.getData() + " ?";
         
         int answer = JOptionPane.showConfirmDialog(null, question, "Confirm", JOptionPane.YES_NO_OPTION);
 
@@ -117,8 +117,8 @@ public class HandleGame {
      * */
     private void getUserMeal(Node node) {
     	
-        String userMeal = JOptionPane.showInputDialog("Qual prato você pensou?");
-        String newMealCategory = JOptionPane.showInputDialog(userMeal  + " é _______ mas " + node.getData() + " não.");
+        String userMeal = JOptionPane.showInputDialog("Qual prato vocÃª pensou?");
+        String newMealCategory = JOptionPane.showInputDialog(userMeal  + " Ã© _______ mas " + node.getData() + " nÃ£o.");
         changeNodeToCategory(node, newMealCategory, userMeal);
         
     }
