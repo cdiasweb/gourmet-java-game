@@ -71,7 +71,7 @@ public class HandleGame {
      * */
     public void showConfirmMealCorrect(Node node) {
     	
-        String question = "O prato que vocÃª pensou Ã© " + node.getData() + " ?";
+        String question = "O prato que você pensou é " + node.getData() + " ?";
         
         // Ask to user if the meal is correct
         int answer = JOptionPane.showConfirmDialog(null, question, "Confirm", JOptionPane.YES_NO_OPTION);
@@ -127,8 +127,8 @@ public class HandleGame {
      * */
     private void getUserMeal(Node node) {
     	
-        String userMeal = JOptionPane.showInputDialog("Qual prato vocÃª pensou?");
-        String newMealCategory = JOptionPane.showInputDialog(userMeal  + " Ã© _______ mas " + node.getData() + " nÃ£o.");
+        String userMeal = JOptionPane.showInputDialog("Qual prato você pensou?");
+        String newMealCategory = JOptionPane.showInputDialog(userMeal  + " é _______ mas " + node.getData() + " não.");
         changeNodeToCategory(node, newMealCategory, userMeal);
         
     }
