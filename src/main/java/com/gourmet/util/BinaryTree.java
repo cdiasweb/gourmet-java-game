@@ -14,7 +14,9 @@ public class BinaryTree {
      * 
      * */
     public void insertNewNode(Node parentNode, String value, boolean position) {
+
         root = insertNode(parentNode, value, position);
+        
     }
     
     // To check if the binarytree is empty, without nodes

@@ -1,24 +1,27 @@
 package com.gourmet.game;
 
 import java.util.ArrayList;
-
 import javax.swing.JOptionPane;
-
 
 import com.gourmet.util.BinaryTree;
 import com.gourmet.util.Node;
 
 public class HandleGame {
-	
-	BinaryTree knowledge;
+    
+    // Binary tree with the knowledge of the game
+    BinaryTree knowledge;
+
+    // Loop of the game
     boolean runGame = true;
 
-    // To make code more readable
+    // Possible choices to JOptionPane
     final int YES = JOptionPane.YES_OPTION;
     final int NO = JOptionPane.NO_OPTION;
     
     public HandleGame() {
-    	knowledge = new BinaryTree();
+
+        knowledge = new BinaryTree();
+        
     }
 
     // Insert first meals in the game 
@@ -34,8 +37,10 @@ public class HandleGame {
     public void startGame() {
     	
     	// Add the first meals to the binarytree
-        if (knowledge.isEmpty()) {
+        if ( knowledge.isEmpty() ) {
+
             addFirstMeals();
+
         }
 
         // Control the game loop
@@ -43,14 +48,16 @@ public class HandleGame {
 
         // To close application and stop loop
         if ( continueGame == JOptionPane.CANCEL_OPTION || continueGame == JOptionPane.CLOSED_OPTION ) {
-        	runGame = false;
+
+            runGame = false;
+            
         }
 
         // Continue the game and the search
         if( runGame ) {
-        	
-        	showConfirmMealCorrect(knowledge.root);
-        	
+
+            showConfirmMealCorrect(knowledge.root);
+            
         }
         
     }
@@ -66,11 +73,12 @@ public class HandleGame {
     	
         String question = "O prato que você pensou é " + node.getData() + " ?";
         
+        // Ask to user if the meal is correct
         int answer = JOptionPane.showConfirmDialog(null, question, "Confirm", JOptionPane.YES_NO_OPTION);
 
         if ( answer == YES ) {
         	
-        	// End of the binarytree and the answer is correct 
+        	// End of the binarytree and the answer is correct. 
             if ( node.isLeaf() ) {
             	
             	showMessageAndRestartGame();
@@ -100,14 +108,16 @@ public class HandleGame {
 
     // Show first message to the user
     private int showStartGameMessage() {
+
     	return JOptionPane.showConfirmDialog(null,  "Pense em um prato que gosta", "Jogo Gourmet", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+    
     }
 
     private void showMessageAndRestartGame() {
 
         JOptionPane.showMessageDialog(null, "Acertei de novo!");
         startGame();
-        
+
     }
 
     /**
