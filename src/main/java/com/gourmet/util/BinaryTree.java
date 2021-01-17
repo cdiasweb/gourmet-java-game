@@ -38,13 +38,13 @@ public class BinaryTree {
         	
         	// The position is true, insert new node and define as rightchild in the parentNode
         	Node newNode = insertNode(parentNode.getRightChild(), data, position);
-            parentNode.setRightChild(newNode);
+            	parentNode.setRightChild(newNode);
             
         } else {
         	
         	// The position is false, insert new node and define as leftchild in the parentNode
         	Node newNode = insertNode(parentNode.getLeftChild(), data, position);
-            parentNode.setLeftChild(newNode);
+            	parentNode.setLeftChild(newNode);
             
         }
 
